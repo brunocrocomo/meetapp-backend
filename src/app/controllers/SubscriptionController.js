@@ -103,6 +103,21 @@ class SubscriptionController {
 
         return res.json(subscription);
     }
+
+    async delete(req, res) {
+        const subscription = await Subscription.findByPk(req.params.id);
+
+        if (!subscription) {
+            return res.status(400).json({
+                error:
+                    'It is not possible to unsubscribe from a meetup that you are not subscribed.',
+            });
+        }
+
+        await subscription.destroy();
+
+        return res.send();
+    }
 }
 
 export default new SubscriptionController();
