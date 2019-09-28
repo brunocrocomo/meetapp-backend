@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
 import User from '../models/User';
+import File from '../models/File';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
 import Queue from '../../lib/Queue';
@@ -19,6 +20,14 @@ class SubscriptionController {
                             [Op.gt]: new Date(),
                         },
                     },
+                    include: [
+                        User,
+                        {
+                            model: File,
+                            as: 'file',
+                            attributes: ['id', 'path', 'url'],
+                        },
+                    ],
                     required: true,
                 },
             ],
