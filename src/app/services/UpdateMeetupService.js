@@ -6,6 +6,10 @@ class UpdateMeetupService {
     async run({ userId, meetupId, meetupInfo }) {
         const meetup = await Meetup.findByPk(meetupId);
 
+        if (!meetup) {
+            throw new Error('Meetup does not exists.');
+        }
+
         if (meetup.user_id !== userId) {
             throw new Error('You cannot modify a meetup you do not own.');
         }
