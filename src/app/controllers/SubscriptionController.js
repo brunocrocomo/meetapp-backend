@@ -41,8 +41,8 @@ class SubscriptionController {
 
     async store(req, res) {
         const subscription = await CreateSubscriptionService.run({
-            userId: req.userId,
             meetupId: req.params.meetupId,
+            userId: req.userId,
         });
 
         return res.json(subscription);
@@ -50,7 +50,8 @@ class SubscriptionController {
 
     async delete(req, res) {
         await CancelSubscriptionService.run({
-            id: req.params.id,
+            meetupId: req.params.meetupId,
+            userId: req.userId,
         });
 
         return res.send();
