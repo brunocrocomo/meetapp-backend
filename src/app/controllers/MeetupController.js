@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { isBefore, startOfDay, endOfDay, parseISO } from 'date-fns';
+import { startOfDay, endOfDay, parseISO } from 'date-fns';
 
 import Meetup from '../models/Meetup';
 import User from '../models/User';
@@ -7,6 +7,7 @@ import File from '../models/File';
 
 import CreateMeetupService from '../services/CreateMeetupService';
 import UpdateMeetupService from '../services/UpdateMeetupService';
+import CancelMeetupService from '../services/CancelMeetupService';
 
 class MeetupController {
     async index(req, res) {
@@ -52,23 +53,10 @@ class MeetupController {
     }
 
     async delete(req, res) {
-        const user_id = req.userId;
-
-        const meetup = await Meetup.findByPk(req.params.id);
-
-        if (meetup.user_id !== user_id) {
-            return res
-                .status(401)
-                .json({ error: 'You cannot delete a meetup you do not own.' });
-        }
-
-        if (meetup.past) {
-            return res.status(400).json({
-                error: 'You cannot delete a meetup in a date in the past.',
-            });
-        }
-
-        await meetup.destroy();
+        await CancelMeetupService.run({
+            userId: req.userId,
+            meetupId: req.params.id,
+        });
 
         return res.send();
     }
