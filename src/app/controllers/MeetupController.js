@@ -4,6 +4,7 @@ import { isBefore, startOfDay, endOfDay, parseISO } from 'date-fns';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
 import File from '../models/File';
+import CreateMeetupService from '../services/CreateMeetupService';
 
 class MeetupController {
     async index(req, res) {
@@ -32,19 +33,10 @@ class MeetupController {
     }
 
     async store(req, res) {
-        if (isBefore(parseISO(req.body.date), new Date())) {
-            return res.status(400).json({
-                error: 'You cannot register a meetup in a date in the past.',
-            });
-        }
-
-        const user_id = req.userId;
-
-        const meetup = await Meetup.create({
-            ...req.body,
-            user_id,
+        const meetup = await CreateMeetupService.run({
+            userId: req.userId,
+            meetupInfo: req.body,
         });
-
         return res.json(meetup);
     }
 
