@@ -6,6 +6,7 @@ import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
 
 import CreateSubscriptionService from '../services/CreateSubscriptionService';
+import CancelSubscriptionService from '../services/CancelSubscriptionService';
 
 class SubscriptionController {
     async index(req, res) {
@@ -48,16 +49,9 @@ class SubscriptionController {
     }
 
     async delete(req, res) {
-        const subscription = await Subscription.findByPk(req.params.id);
-
-        if (!subscription) {
-            return res.status(400).json({
-                error:
-                    'It is not possible to unsubscribe from a meetup that you are not subscribed.',
-            });
-        }
-
-        await subscription.destroy();
+        await CancelSubscriptionService.run({
+            id: req.params.id,
+        });
 
         return res.send();
     }
