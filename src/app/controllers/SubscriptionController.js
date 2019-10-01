@@ -8,8 +8,17 @@ import Subscription from '../models/Subscription';
 import CreateSubscriptionService from '../services/CreateSubscriptionService';
 import CancelSubscriptionService from '../services/CancelSubscriptionService';
 
+import Cache from '../../lib/Cache';
+
 class SubscriptionController {
     async index(req, res) {
+        const cacheKey = `user:${req.userId}:subscriptions`;
+        const cached = await Cache.get(cacheKey);
+
+        if (cached) {
+            return res.json(cached);
+        }
+
         const subscriptions = await Subscription.findAll({
             where: {
                 user_id: req.userId,
@@ -35,6 +44,8 @@ class SubscriptionController {
             ],
             order: [[Meetup, 'date']],
         });
+
+        await Cache.set(cacheKey, subscriptions);
 
         return res.json(subscriptions);
     }

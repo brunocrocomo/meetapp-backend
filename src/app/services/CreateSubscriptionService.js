@@ -5,6 +5,8 @@ import Subscription from '../models/Subscription';
 import Queue from '../../lib/Queue';
 import SubscriptionMail from '../jobs/SubscriptionMail';
 
+import Cache from '../../lib/Cache';
+
 class CreateSubscriptionService {
     async run({ meetupId, userId }) {
         const user = await User.findByPk(userId);
@@ -63,6 +65,11 @@ class CreateSubscriptionService {
             meetup,
             user,
         });
+
+        /**
+         * Invalidate cache
+         */
+        await Cache.invalidatePrefix(`user:${userId}:subscriptions`);
 
         return subscription;
     }

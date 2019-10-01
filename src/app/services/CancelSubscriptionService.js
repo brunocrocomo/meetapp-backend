@@ -1,5 +1,7 @@
 import Subscription from '../models/Subscription';
 
+import Cache from '../../lib/Cache';
+
 class CancelSubscriptionService {
     async run({ meetupId, userId }) {
         const subscription = await Subscription.findOne({
@@ -16,6 +18,11 @@ class CancelSubscriptionService {
         }
 
         await subscription.destroy();
+
+        /**
+         * Invalidate cache
+         */
+        await Cache.invalidatePrefix(`user:${userId}:subscriptions`);
     }
 }
 
