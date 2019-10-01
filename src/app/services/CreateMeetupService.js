@@ -2,6 +2,8 @@ import { isBefore, parseISO } from 'date-fns';
 
 import Meetup from '../models/Meetup';
 
+import Cache from '../../lib/Cache';
+
 class CreateMeetupService {
     async run({ userId, meetupInfo }) {
         if (isBefore(parseISO(meetupInfo.date), new Date())) {
@@ -14,6 +16,11 @@ class CreateMeetupService {
             user_id: userId,
             ...meetupInfo,
         });
+
+        /**
+         * Invalidate cache
+         */
+        await Cache.invalidatePrefix(`user:${userId}:organizing`);
 
         return meetup;
     }

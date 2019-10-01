@@ -2,6 +2,8 @@ import { isBefore, parseISO } from 'date-fns';
 
 import Meetup from '../models/Meetup';
 
+import Cache from '../../lib/Cache';
+
 class UpdateMeetupService {
     async run({ userId, meetupId, meetupInfo }) {
         const meetup = await Meetup.findByPk(meetupId);
@@ -27,6 +29,11 @@ class UpdateMeetupService {
         }
 
         await meetup.update(meetupInfo);
+
+        /**
+         * Invalidate cache
+         */
+        await Cache.invalidatePrefix(`user:${userId}:organizing`);
 
         return meetup;
     }

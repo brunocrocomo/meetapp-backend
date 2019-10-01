@@ -1,5 +1,7 @@
 import Meetup from '../models/Meetup';
 
+import Cache from '../../lib/Cache';
+
 class CancelMeetupService {
     async run({ userId, meetupId }) {
         const meetup = await Meetup.findByPk(meetupId);
@@ -19,6 +21,11 @@ class CancelMeetupService {
         }
 
         await meetup.destroy();
+
+        /**
+         * Invalidate cache
+         */
+        await Cache.invalidatePrefix(`user:${userId}:organizing`);
     }
 }
 
