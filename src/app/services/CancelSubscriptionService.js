@@ -1,7 +1,7 @@
 import Subscription from '../models/Subscription';
 
 class CancelSubscriptionService {
-    async run({ userId, meetupId }) {
+    async run({ meetupId, userId }) {
         const subscription = await Subscription.findOne({
             where: {
                 user_id: userId,

@@ -6,7 +6,7 @@ import Queue from '../../lib/Queue';
 import SubscriptionMail from '../jobs/SubscriptionMail';
 
 class CreateSubscriptionService {
-    async run({ userId, meetupId }) {
+    async run({ meetupId, userId }) {
         const user = await User.findByPk(userId);
         const meetup = await Meetup.findByPk(meetupId, {
             include: [User],

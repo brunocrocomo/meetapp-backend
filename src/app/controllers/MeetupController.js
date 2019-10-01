@@ -40,6 +40,7 @@ class MeetupController {
             userId: req.userId,
             meetupInfo: req.body,
         });
+
         return res.json(meetup);
     }
 
@@ -49,6 +50,7 @@ class MeetupController {
             meetupId: req.params.id,
             meetupInfo: req.body,
         });
+
         return res.json(meetup);
     }
 
