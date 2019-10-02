@@ -1,3 +1,5 @@
+import { badRequest } from 'boom';
+
 import User from '../models/User';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
@@ -15,13 +17,13 @@ class CreateSubscriptionService {
         });
 
         if (meetup.past) {
-            throw new Error(
+            throw badRequest(
                 'You cannot subscribe to a meetup in a date in the past.'
             );
         }
 
         if (meetup.user_id === userId) {
-            throw new Error('You cannot subscribe to your own meetup.');
+            throw badRequest('You cannot subscribe to your own meetup.');
         }
 
         const checkAlreadySubscribed = await Subscription.findOne({
@@ -32,7 +34,7 @@ class CreateSubscriptionService {
         });
 
         if (checkAlreadySubscribed) {
-            throw new Error('You are already subscribed to this meetup.');
+            throw badRequest('You are already subscribed to this meetup.');
         }
 
         const checkDate = await Subscription.findOne({
@@ -51,7 +53,7 @@ class CreateSubscriptionService {
         });
 
         if (checkDate) {
-            throw new Error(
+            throw badRequest(
                 'You cannot subscribe to two meetups that will occur at the same time.'
             );
         }

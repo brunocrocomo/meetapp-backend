@@ -10,6 +10,8 @@ import RateLimitRedis from 'rate-limit-redis';
 import Youch from 'youch';
 import * as Sentry from '@sentry/node';
 import 'express-async-errors';
+import { isBoom } from 'boom';
+
 import routes from './routes';
 import sentryConfig from './config/sentry';
 
@@ -58,6 +60,11 @@ class App {
 
     exceptionHandler() {
         this.server.use(async (err, req, res, next) => {
+            if (isBoom(err)) {
+                const { statusCode, message } = err.output.payload;
+                return res.status(statusCode).json({ error: message });
+            }
+
             if (process.env.NODE_ENV === 'development') {
                 const errors = await new Youch(err, req).toJSON();
 

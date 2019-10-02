@@ -1,3 +1,5 @@
+import { badRequest } from 'boom';
+
 import Subscription from '../models/Subscription';
 
 import Cache from '../../lib/Cache';
@@ -12,7 +14,7 @@ class CancelSubscriptionService {
         });
 
         if (!subscription) {
-            throw new Error(
+            throw badRequest(
                 'It is not possible to unsubscribe from a meetup that you are not subscribed to.'
             );
         }

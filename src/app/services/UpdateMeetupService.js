@@ -1,4 +1,5 @@
 import { isBefore, parseISO } from 'date-fns';
+import { badRequest, unauthorized } from 'boom';
 
 import Meetup from '../models/Meetup';
 
@@ -9,21 +10,21 @@ class UpdateMeetupService {
         const meetup = await Meetup.findByPk(meetupId);
 
         if (!meetup) {
-            throw new Error('Meetup does not exists.');
+            throw badRequest('Meetup does not exists.');
         }
 
         if (meetup.user_id !== userId) {
-            throw new Error('You cannot modify a meetup you do not own.');
+            throw unauthorized('You cannot modify a meetup you do not own.');
         }
 
         if (isBefore(parseISO(meetupInfo.date), new Date())) {
-            throw new Error(
+            throw badRequest(
                 'You cannot register a meetup in a date in the past.'
             );
         }
 
         if (meetup.past) {
-            throw new Error(
+            throw badRequest(
                 'You cannot modify a meetup in a date in the past.'
             );
         }

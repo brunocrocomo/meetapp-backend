@@ -1,13 +1,14 @@
 import { isBefore, parseISO } from 'date-fns';
 
-import Meetup from '../models/Meetup';
-
+import { badRequest } from 'boom';
 import Cache from '../../lib/Cache';
+
+import Meetup from '../models/Meetup';
 
 class CreateMeetupService {
     async run({ userId, meetupInfo }) {
         if (isBefore(parseISO(meetupInfo.date), new Date())) {
-            throw new Error(
+            throw badRequest(
                 'You cannot register a meetup in a date in the past.'
             );
         }
