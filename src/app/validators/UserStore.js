@@ -16,8 +16,10 @@ export default async (req, res, next) => {
 
         return next();
     } catch (err) {
-        return res
-            .status(400)
-            .json({ error: 'Validation fails.', messages: err.inner });
+        return res.status(400).json({
+            error:
+                'Incomplete request or invalid data. Please, check your data and try again.',
+            messages: err.inner,
+        });
     }
 };
