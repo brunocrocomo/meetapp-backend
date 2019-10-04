@@ -30,6 +30,7 @@ class MeetupController {
             ],
             limit: 10,
             offset: 10 * page - 10,
+            order: ['date', 'id'],
         });
 
         return res.json(meetups);
