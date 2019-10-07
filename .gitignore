@@ -1,4 +1,8 @@
 node_modules
 tmp/uploads/*
-!tmp/uploads/.gitkeep
+!tmp/uploads/meetup_1.jpg
+!tmp/uploads/meetup_2.jpg
+!tmp/uploads/meetup_3.jpg
+!tmp/uploads/meetup_4.jpg
+!tmp/uploads/meetup_5.jpg
 .env
