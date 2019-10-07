@@ -15,6 +15,8 @@ import { isBoom } from 'boom';
 import routes from './routes';
 import sentryConfig from './config/sentry';
 
+import Cache from './lib/Cache';
+
 import './database';
 
 class App {
@@ -26,6 +28,7 @@ class App {
         this.middlewares();
         this.routes();
         this.exceptionHandler();
+        this.misc();
     }
 
     middlewares() {
@@ -73,6 +76,13 @@ class App {
 
             return res.status(500).json({ error: 'Internal server error.' });
         });
+    }
+
+    async misc() {
+        // Invalidate 'user' cache for development purposes
+        if (process.env.NODE_ENV === 'development') {
+            await Cache.invalidatePrefix(`user:*`);
+        }
     }
 }
 
