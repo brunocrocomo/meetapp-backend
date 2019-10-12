@@ -4,7 +4,7 @@ const firstDay = new Date(2019, 0, 1);
 const lastDay = new Date(2019, 11, 31);
 const today = new Date();
 const meetups = [];
-for (let id = 1; id < 100; id += 1) {
+for (let id = 1; id <= 100; id += 1) {
     meetups.push({
         id,
         title: faker.name.jobTitle(),
@@ -22,7 +22,7 @@ module.exports = {
     up: async queryInterface => {
         await queryInterface.bulkInsert('meetups', meetups, {});
         await queryInterface.sequelize.query(
-            `ALTER SEQUENCE "users_id_seq" RESTART WITH ${meetups.length + 1}`
+            `ALTER SEQUENCE "meetups_id_seq" RESTART WITH ${meetups.length + 1}`
         );
     },
 
